@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation=" http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="springJobTask" class="cn.thc.service.timedtask.SpringJobTask"/>
+
+    <bean name="springJobTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="springJobTask"/>
+        <property name="targetMethod" value="printJob"/>
+    </bean>
+
+    <bean name="springJobTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="springJobTaskJob"/>
+        <property name="cronExpression" value="00 04 11 * * ?"/>
+    </bean>
+
+    <!--在工厂中加入任务-->
+    <bean name="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <!--<ref bean="springJobTaskTrigger"/>-->
+            </list>
+        </property>
+    </bean>
+
+</beans>
